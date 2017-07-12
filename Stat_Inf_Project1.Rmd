@@ -26,21 +26,32 @@ hist(rexp(1000, lambda))
 
 ### Simulations
 
-For this exercise we'll be investigating 40 exponential distributions of 1000 simulations each, using a fixed rate of 0.2. The following code will generate all our data, by running the full number of simulations across all required distributions and arranging into a matrix, ie 40 rows of 1000 simulations each.
+For this exercise we'll be investigating the distribution of 40 exponentials across 1000 simulations, using a fixed rate of 0.2. The following code will generate all our data, by running the full number of simulations across all required distributions and arranging into a matrix, ie 1000 rows of 40..
 ```{r run simulations}
 lambda <- 0.2
 no_of_simulations <- 1000
-no_of_distributions <- 40
-distribution_matrix <- matrix(rexp(no_of_simulations * no_of_distributions, lambda), nrow = no_of_distributions, ncol = no_of_simulations)
+no_of_exponentials <- 40
+distribution_matrix <- matrix(rexp(no_of_simulations * no_of_exponentials, lambda), ncol = no_of_exponentials, nrow = no_of_simulations)
 ```
 
-### Comparison 1 : Theoretical vs Sampled Mean
+### Comparisons
 
-The following plot shows the distribution of sample means, and the theoretical mean
+
 ```{r means}
 library(ggplot2)
 
 means_of_distributions <- apply(distribution_matrix, 1, mean)
-means_plot <- ggplot(data.frame(means_of_distributions), aes(means_of_distributions)) + geom_histogram(binwidth = 0.1) + geom_vline(xintercept = mean(means_of_distributions), col='red') + geom_vline(xintercept = 1/lambda, col='blue')
+
+sample_mean <- mean(means_of_distributions)
+theoretical_mean <- 1/lambda
+
+sample_variance <- var(means_of_distributions)
+theoretical_variance <- 1/(lambda^2 * no_of_exponentials)
+```
+The sampled mean of the the simulations is `r sample_mean`, very close to the theoretical mean of `r theoretical_mean`
+The sampled variance of the above distribution is `r sample_variance`, very close to the theoretical variance of `r theoretical_variance`
+
+```{r plot distribution}
+means_plot <- ggplot(data.frame(means_of_distributions), aes(means_of_distributions)) + geom_histogram(binwidth = 0.1) + geom_vline(xintercept =  sample_mean , col='red') + geom_vline(xintercept = theoretical_mean, col='blue')
 means_plot
 ```
