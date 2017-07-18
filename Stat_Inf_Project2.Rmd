@@ -1,0 +1,18 @@
+---
+title: 'Statistical Inference : Course Project Part 2'
+author: "Craig Garlick"
+date: "18 July 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Basic Differential Analysis
+
+This project will  perform some basic inferential  analysis on the "Tooth Growth" data set included in the R data sets package
+
+```{r cars}
+summary(cars)
+```
