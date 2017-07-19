@@ -7,12 +7,39 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+require(gridExtra)
 ```
 
 ## Basic Differential Analysis
 
-This project will  perform some basic inferential  analysis on the "Tooth Growth" data set included in the R data sets package
+This project will  perform some basic inferential  analysis on the "Tooth Growth" data set included in the R data sets package. For reference heres the included description;
 
-```{r cars}
-summary(cars)
+"The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, (orange juice or ascorbic acid (a form of vitamin C and coded as VC)."
+
+Loading the data we can have a look at the first few rows and see the structure
+
+```{r load data}
+tooth_growth <- datasets::ToothGrowth
+head(tooth_growth)
+str(tooth_growth)
 ```
+Having seen the data we can make some exploratory plots to help visualise the relationships:
+
+1. Histogram of the recorded lengths, coloured by delivery method. This shows us an indication that orange juice may be responsible for increased growth
+2. Plot of dose vs length, with points distinguished by delivery method. Shows that increased dosage appears to correspond to increased length
+
+```{r plots}
+library(ggplot2)
+
+histogram <- qplot(tooth_growth$len, color = tooth_growth$supp, xlab = 'length', bins=15) + theme(legend.title=element_blank())
+points <- qplot(dose, len, data = tooth_growth, color = supp, ylab = 'length')
+grid.arrange(histogram, points, nrow=2)
+```
+
+3. Boxplot, also suggests that orange juice may cause an increased growth over ascorbic acid, at least up to a certain dosage
+
+```{r boxplot}
+ggplot(tooth_growth, aes(supp, len)) + geom_boxplot(aes(color = supp)) + facet_grid(. ~ dose)
+```
+
+Having visulaised our data and gained  in indication of thr relationships,  we can put them through a hypothesis test
